@@ -21,6 +21,8 @@
            },
            cancelNew: function() {
                document.getElementById('newNote').style.display = 'none';
+               document.getElementById('iptAddNote').value = '';
+               document.getElementById('iptAddTitle').value = '';
            }
        }
     })();
@@ -41,6 +43,7 @@
         <?php
         echo $this->Form->control('title', [
             'class' => 'form-control',
+            'id' => 'iptAddTitle',
             'label' => [
                 'class' => 'form-label',
             ],
@@ -48,6 +51,7 @@
         echo $this->Form->control('note', [
             'type' => 'textarea',
             'class' => 'form-control',
+            'id' => 'iptAddNote',
             'label' => [
                 'class' => 'form-label',
             ],

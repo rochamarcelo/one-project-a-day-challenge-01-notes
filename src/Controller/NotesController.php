@@ -31,7 +31,11 @@ class NotesController extends AppController
             $this->Flash->error(__('The note could not be saved. Please, try again.'));
         }
         $newNote = $id ? $note : $this->Notes->newEmptyEntity();
-        $notes = $this->paginate($this->Notes);
+        $notes = $this->paginate($this->Notes, [
+            'order' => [
+                'Notes.modified' => 'desc',
+            ]
+        ]);
         $this->set(compact('notes', 'newNote'));
     }
 

@@ -4,6 +4,20 @@
  * @var \App\Model\Entity\Note[]|\Cake\Collection\CollectionInterface $notes
  */
 ?>
+<script>
+    var NotesApp = (function() {
+       return {
+           startEdit: function(id) {
+               document.getElementById('noteEdit' + id).style.display = 'block';
+               document.getElementById('noteActions' + id).style.display = 'none';
+           },
+           cancelEdit: function(id) {
+               document.getElementById('noteEdit' + id).style.display = 'none';
+               document.getElementById('noteActions' + id).style.display = 'block';
+           }
+       }
+    })();
+</script>
 <div class="notes index content">
     <?= $this->Html->link(
         __('New Note'),
@@ -16,9 +30,39 @@
                 <h5 class="card-title"><?= h($note->title) ?></h5>
                 <h6 class="card-subtitle mb-2 text-muted"><?= h($note->modified) ?></h6>
                 <p class="card-text"><?= h($note->note) ?></p>
-                <?= $this->Html->link(
+                <div class="edit-note" id="noteEdit<?=$note->id?>" style="display: none;">
+                    <?= $this->Form->create($note) ?>
+                    <?= $this->Form->hidden('id')?>
+                    <?php
+                        echo $this->Form->control('title', [
+                            'class' => 'form-control',
+                            'label' => [
+                                'class' => 'form-label',
+                            ],
+                        ]);
+                        echo $this->Form->control('note', [
+                            'type' => 'textarea',
+                            'class' => 'form-control',
+                            'label' => [
+                                'class' => 'form-label',
+                            ],
+                        ]);
+                    ?>
+                    <?= $this->Form->button(__('Save'), ['class' => 'btn btn-primary']) ?>
+                    <?= $this->Html->tag('span', __('Cancel'), [
+                        'class' => 'btn btn-link',
+                        'onclick' => sprintf('NotesApp.cancelEdit(%s);', $note->id),
+                    ])?>
+                    <?= $this->Form->end() ?>
+                </div>
+                <div id="noteActions<?= $note->id?>">
+                <?= $this->Html->tag(
+                    'span',
                     __('Edit'),
-                    ['action' => 'edit', $note->id]
+                    [
+                        'class' => 'btn btn-link',
+                        'onclick' => sprintf('NotesApp.startEdit(%s);', $note->id),
+                    ]
                 ) ?>
                 <?= $this->Form->postLink(
                     __('Delete'),
@@ -28,6 +72,7 @@
                     ],
                     ['confirm' => __('Are you sure you want to delete # {0}?', $note->id)]
                 ) ?>
+                </div>
             </div>
         </div>
     <?php endforeach; ?>

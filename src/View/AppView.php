@@ -37,5 +37,13 @@ class AppView extends View
      */
     public function initialize(): void
     {
+        $this->loadHelper('Paginator', [
+            'templates' => [
+                'nextActive' => '<li class="next"><a rel="next" class="btn btn-outline-dark m-1" href="{{url}}">{{text}}</a></li>',
+                'nextDisabled' => '<li class="next disabled"><a class="btn btn-outline-secondary m-1" disabled href="" onclick="return false;">{{text}}</a></li>',
+                'prevActive' => '<li class="prev"><a rel="prev" class="btn btn-outline-dark m-1" href="{{url}}">{{text}}</a></li>',
+                'prevDisabled' => '<li class="prev disabled"><a class="btn btn-outline-secondary m-1" disabled href="" onclick="return false;">{{text}}</a></li>',
+            ]
+        ]);
     }
 }

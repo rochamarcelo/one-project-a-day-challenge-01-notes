@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Note[]|\Cake\Collection\CollectionInterface $notes
+ * @var \App\Model\Entity\Note $newNote
  */
 ?>
 <script>
@@ -14,16 +15,53 @@
            cancelEdit: function(id) {
                document.getElementById('noteEdit' + id).style.display = 'none';
                document.getElementById('noteActions' + id).style.display = 'block';
+           },
+           startNew: function() {
+               document.getElementById('newNote').style.display = 'block';
+           },
+           cancelNew: function() {
+               document.getElementById('newNote').style.display = 'none';
            }
        }
     })();
 </script>
 <div class="notes index content">
-    <?= $this->Html->link(
+    <?= $this->Html->tag(
+        'span',
         __('New Note'),
-        ['action' => 'add'],
-        ['class' => 'btn btn-primary mb-3']
+        [
+            'class' => 'btn btn-primary mb-3',
+            'onclick' => 'NotesApp.startNew();',
+        ]
     ) ?>
+    <div class="new-note" id="newNote" style="display: none">
+        <div class="card mb-3">
+            <div class="card-body">
+        <?= $this->Form->create($newNote) ?>
+        <?php
+        echo $this->Form->control('title', [
+            'class' => 'form-control',
+            'label' => [
+                'class' => 'form-label',
+            ],
+        ]);
+        echo $this->Form->control('note', [
+            'type' => 'textarea',
+            'class' => 'form-control',
+            'label' => [
+                'class' => 'form-label',
+            ],
+        ]);
+        ?>
+        <?= $this->Form->button(__('Save'), ['class' => 'btn btn-primary']) ?>
+        <?= $this->Html->tag('span', __('Cancel'), [
+            'class' => 'btn btn-link',
+            'onclick' => 'NotesApp.cancelNew();',
+        ])?>
+        <?= $this->Form->end() ?>
+            </div>
+        </div>
+    </div>
     <?php foreach ($notes as $note): ?>
         <div class="card mb-3">
             <div class="card-body">

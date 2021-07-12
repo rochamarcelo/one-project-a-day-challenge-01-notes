@@ -18,6 +18,8 @@ class NotesController extends AppController
      */
     public function index()
     {
+        $id = null;
+        $note = null;
         if ($this->request->is(['post', 'put'])) {
             $id = $this->request->getData('id');
             $note = $this->getNoteEntity($id);
@@ -28,9 +30,9 @@ class NotesController extends AppController
             }
             $this->Flash->error(__('The note could not be saved. Please, try again.'));
         }
-
+        $newNote = $id ? $note : $this->Notes->newEmptyEntity();
         $notes = $this->paginate($this->Notes);
-        $this->set(compact('notes'));
+        $this->set(compact('notes', 'newNote'));
     }
 
     /**

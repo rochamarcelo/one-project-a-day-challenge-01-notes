@@ -18,7 +18,6 @@ namespace App;
 
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
-use Cake\Core\Exception\MissingPluginException;
 use Cake\Datasource\FactoryLocator;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
@@ -34,6 +33,8 @@ use Cake\Routing\Middleware\RoutingMiddleware;
  *
  * This defines the bootstrapping logic and middleware layers you
  * want to use in your application.
+ *
+ * @extends \Cake\Http\BaseApplication<\App\Application>
  */
 class Application extends BaseApplication
 {
@@ -87,10 +88,8 @@ class Application extends BaseApplication
 
             // Add routing middleware.
             // If you have a large number of routes connected, turning on routes
-            // caching in production could improve performance. For that when
-            // creating the middleware instance specify the cache config name by
-            // using it's second constructor argument:
-            // `new RoutingMiddleware($this, '_cake_routes_')`
+            // caching in production could improve performance.
+            // See https://github.com/CakeDC/cakephp-cached-routing
             ->add(new RoutingMiddleware($this))
 
             // Parse various types of encoded request bodies so that they are
@@ -99,7 +98,7 @@ class Application extends BaseApplication
             ->add(new BodyParserMiddleware())
 
             // Cross Site Request Forgery (CSRF) Protection Middleware
-            // https://book.cakephp.org/4/en/controllers/middleware.html#cross-site-request-forgery-csrf-middleware
+            // https://book.cakephp.org/4/en/security/csrf.html#cross-site-request-forgery-csrf-middleware
             ->add(new CsrfProtectionMiddleware([
                 'httponly' => true,
             ]));
@@ -127,11 +126,8 @@ class Application extends BaseApplication
      */
     protected function bootstrapCli(): void
     {
-        try {
-            $this->addPlugin('Bake');
-        } catch (MissingPluginException $e) {
-            // Do not halt if the plugin is missing
-        }
+        $this->addOptionalPlugin('Cake/Repl');
+        $this->addOptionalPlugin('Bake');
 
         $this->addPlugin('Migrations');
 
